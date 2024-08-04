@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.madchick.oee.infrastructure.dao.IOpcMiningTaskDao">
+
+    <resultMap id="OpcMiningTaskMap" type="cn.madchick.oee.infrastructure.po.OpcMiningTask">
+        <id column="id" property="id"/>
+        <result column="task_id" property="taskId"/>
+        <result column="node_id" property="nodeId"/>
+        <result column="node_name" property="nodeName"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="activity_name" property="activityName"/>
+        <result column="opc_enabled" property="opcEnabled"/>
+        <result column="strategy_id" property="strategyId"/>
+        <result column="uuid" property="uuid"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="cn.madchick.oee.infrastructure.po.OpcMiningTask">
+        INSERT INTO opc_task
+        (task_id, node_id, node_name,activity_id, activity_name, opc_enabled, strategy_id, uuid, create_time, update_time)
+        VALUES
+        (#{taskId}, #{nodeId}, #{nodeName}, #{activityId}, #{activityName}, #{opcEnabled}, #{strategyId}, #{uuid}, now(), now())
+    </insert>
+
+    <select id="queryNodeExistsActivity" parameterType="cn.madchick.oee.infrastructure.po.OpcMiningTask" resultMap="OpcMiningTaskMap">
+        SELECT activity_id, task_id, strategy_id, opc_enabled
+        FROM opc_task
+        WHERE node_id = #{nodeId} AND opc_enabled = 1
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
+    <select id="queryStrategyIdList" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT DISTINCT strategy_id AS strategyId
+        FROM opc_task
+        WHERE opc_enabled = 1 AND activity_id = #{activityId}
+    </select>
+
+    <select id="queryNodeList" parameterType="cn.madchick.oee.infrastructure.po.OpcMiningTask" resultType="java.lang.String">
+        SELECT node_name AS nodeName
+        FROM opc_task
+        WHERE opc_enabled = 1 AND activity_id = #{activityId} AND strategy_id = #{strategyId}
+    </select>
+
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.madchick.oee.infrastructure.dao.IActivityDao">
+
+    <resultMap id="activityMap" type="cn.madchick.oee.infrastructure.po.Activity">
+        <id column="id" property="id"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="activity_name" property="activityName"/>
+        <result column="area" property="area"/>
+        <result column="passwd" property="passwd"/>
+        <result column="state" property="state"/>
+        <result column="creator" property="creator"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="cn.madchick.oee.infrastructure.po.Activity">
+        INSERT INTO activity
+        (activity_id, activity_name, area, passwd, state, creator, create_time, update_time)
+        VALUES
+            (#{activityId}, #{activityName}, #{area},#{passwd}, #{state}, #{creator}, now(), now())
+    </insert>
+
+    <update id="alterState" parameterType="cn.madchick.oee.domain.activity.model.vo.AlterStateVO">
+        UPDATE activity
+        SET state = #{afterState}
+        WHERE activity_id = #{activityId} AND state = #{beforeState}
+    </update>
+
+    <select id="queryActivityById" parameterType="java.lang.Long" resultMap="activityMap">
+        SELECT activity_id, activity_name, area, passwd, state, creator, create_time, update_time
+        FROM activity
+        WHERE activity_id = #{activityId}
+    </select>
+
+    <select id="queryActivityInfoCount" parameterType="cn.madchick.oee.domain.activity.model.req.ActivityInfoLimitPageReq" resultType="java.lang.Long">
+        SELECT count(*) FROM activity
+        <trim prefix="where" prefixOverrides="AND | OR" suffixOverrides="and">
+            <if test="null != activityId">
+                activity_id = #{activityId}
+            </if>
+            <if test="null != activityName">
+                activity_name = #{activityName}
+            </if>
+        </trim>
+    </select>
+
+    <select id="queryActivityInfoList" parameterType="cn.madchick.oee.domain.activity.model.req.ActivityInfoLimitPageReq" resultMap="activityMap">
+        SELECT id, activity_id, activity_name, area, passwd, state, creator, create_time, update_time
+        FROM activity
+        <!-- 通过trim标签去除多余的AND或OR -->
+        <trim prefix="where" prefixOverrides="AND | OR" suffixOverrides="and">
+            <if test="null != activityId">
+                activity_id = #{activityId}
+            </if>
+            <if test="null != activityName">
+                activity_name = #{activityName}
+            </if>
+        </trim>
+        ORDER BY id DESC
+        <!-- 分页 -->
+        LIMIT #{pageBegin}, #{pageEnd}
+    </select>
+
+</mapper>

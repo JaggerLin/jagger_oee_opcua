@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.madchick.oee.infrastructure.dao.INodeDao">
+
+    <resultMap id="nodeMap" type="cn.madchick.oee.infrastructure.po.Node">
+        <id column="id" property="id"/>
+        <result column="node_id" property="nodeId"/>
+        <result column="node_name" property="nodeName"/>
+        <result column="node_type" property="nodeType"/>
+        <result column="connect_status" property="connectStatus"/>
+        <result column="opc_enabled" property="opcEnabled"/>
+        <result column="scan_cycle" property="scanCycle"/>
+        <result column="is_sensor" property="sensor"/>
+        <result column="ip_address" property="ipAddress"/>
+        <result column="device_code" property="deviceCode"/>
+        <result column="area" property="area"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="insertList" parameterType="java.util.List">
+        INSERT INTO node
+            (node_id, node_name, node_type, connect_status,opc_enabled,scan_cycle,is_sensor,ip_address,device_code,area, create_time, update_time)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.nodeId},#{item.nodeName},#{item.nodeType},#{item.connectStatus},#{item.opcEnabled},#{item.scanCycle},
+            #{item.sensor},#{item.ipAddress},#{item.deviceCode},#{item.area},NOW(),NOW()
+            )
+        </foreach>
+    </insert>
+
+    <select id="queryNodeInfo" parameterType="java.lang.Long" resultMap="nodeMap">
+        SELECT
+            id, node_id, node_name, node_type, connect_status, opc_enabled, scan_cycle, is_sensor, ip_address, device_code, area, create_time, update_time
+        FROM node
+        WHERE node_id = #{nodeId}
+    </select>
+
+</mapper>
