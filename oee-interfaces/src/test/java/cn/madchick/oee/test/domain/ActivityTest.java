@@ -74,8 +74,6 @@ public class ActivityTest {
         strategyDetail_01.setBeginTime(new Date());
         strategyDetail_01.setEndTime(new Date());
         strategyDetail_01.setFrequency(1000);
-        strategyDetail_01.setNodeId(30001L);
-        strategyDetail_01.setNodeName("MD3-1#机");
         strategyDetail_01.setThreshold(60000);
 
         // 创建一个策略详细对象
@@ -84,8 +82,6 @@ public class ActivityTest {
         strategyDetail_02.setBeginTime(new Date());
         strategyDetail_02.setEndTime(new Date());
         strategyDetail_02.setFrequency(1000);
-        strategyDetail_02.setNodeId(30002L);
-        strategyDetail_02.setNodeName("MD3-2#机");
         strategyDetail_02.setThreshold(60000);
 
         // 创建一个list，用于存放策略详细对象
