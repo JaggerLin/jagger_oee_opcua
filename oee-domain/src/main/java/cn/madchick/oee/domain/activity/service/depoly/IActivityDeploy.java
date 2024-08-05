@@ -14,17 +14,20 @@ public interface IActivityDeploy {
 
         /**
         * 创建活动信息
-        *
         * @param req 活动配置信息
         */
         void createActivity(ActivityConfigReq req);
 
         /**
         * 修改活动信息
-        *
         * @param req 活动配置信息
         */
         void updateActivity(ActivityConfigReq req);
 
+        /**
+         * 查询活动信息
+         * @param req 活动分页请求
+         * @return 活动分页信息
+         */
         ActivityInfoLimitPageRich queryActivityInfoLimitPage(ActivityInfoLimitPageReq req);
 }
