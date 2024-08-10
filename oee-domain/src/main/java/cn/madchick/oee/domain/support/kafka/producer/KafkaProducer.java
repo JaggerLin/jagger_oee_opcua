@@ -27,8 +27,11 @@ public class KafkaProducer {
 
     /**
      * MQ主题：opc采集到的实时数据
+     * 创建kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic OPC_HeartBeat
+     * 创建kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic OPC_Threshold
+     * 1) zkServer **** 2) 进入到Kafka安装目录:.\bin\windows\kafka-server-start.bat .\config\server.properties **** 3) 以管理员权限新开:kafka-topics.bat --bootstrap-server localhost:9092 --list
      */
-    public static final String TOPIC_HeartBeat = "OPC_Heartbeat";
+    public static final String TOPIC_HeartBeat = "OPC_HeartBeat";
 
     public static final String TOPIC_Threshold = "OPC_Threshold";
 

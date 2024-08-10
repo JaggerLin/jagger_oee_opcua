@@ -1,12 +1,13 @@
 package cn.madchick.oee.domain.opcua.service.mining.impl;
 
+import cn.madchick.oee.domain.activity.model.vo.NodeRecordVO;
 import cn.madchick.oee.domain.opcua.service.mining.IOpcUaSamplingTask;
+import cn.madchick.oee.domain.support.kafka.producer.KafkaProducer;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscriptionManager;
 import org.eclipse.milo.opcua.sdk.client.subscriptions.ManagedDataItem;
 import org.eclipse.milo.opcua.sdk.client.subscriptions.ManagedSubscription;
-import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DateTime;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
@@ -16,7 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -31,6 +34,9 @@ import java.util.concurrent.ExecutorService;
 public class HeartBeatSamplingTask implements IOpcUaSamplingTask {
 
     private final Logger logger = LoggerFactory.getLogger(DoOpcUaMiningImpl.class);
+
+    @Resource
+    private KafkaProducer kafkaProducer;
 
     /** 从订阅的监视项目中删除某一个 **/
     @Override
@@ -235,6 +241,15 @@ public class HeartBeatSamplingTask implements IOpcUaSamplingTask {
                             "OPC UA 节点名：{} 值：{} 时间：{}",
                             items.get(i).getNodeId().getIdentifier().toString(), values.get(i).getValue().getValue().toString(), System.currentTimeMillis()
                     );
+                    NodeRecordVO nodeRecordVO = new NodeRecordVO();
+                    nodeRecordVO.setNodeId(1000L);
+                    nodeRecordVO.setNodeName(items.get(i).getNodeId().getIdentifier().toString());
+                    nodeRecordVO.setNodeValue(values.get(i).getValue().getValue().toString());
+                    nodeRecordVO.setUpdateTime(new Date(System.currentTimeMillis()));
+                    nodeRecordVO.setArea("MD3");
+                    nodeRecordVO.setNodeType("Boolean");
+                    nodeRecordVO.setNodeUnit("/");
+                    kafkaProducer.sendOpcHeartbeatData(nodeRecordVO);
                 }
             });
             // 持续监听

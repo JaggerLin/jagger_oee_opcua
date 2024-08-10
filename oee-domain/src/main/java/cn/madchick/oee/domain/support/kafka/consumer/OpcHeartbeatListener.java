@@ -25,7 +25,7 @@ public class OpcHeartbeatListener {
 
     private Logger logger = LoggerFactory.getLogger(OpcHeartbeatListener.class);
 
-    @KafkaListener(topics = "TOPIC_HeartBeat", groupId = "Oee")
+    @KafkaListener(topics = "OPC_HeartBeat", groupId = "Oee")
     public void onMessage(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic){
         Optional<?> message = Optional.ofNullable(record.value());
         // 0. 实际场景在消费MQ的时候，可以通过固定标识判断是否已经消费过，添加记录。对程序的处理会起到优化作用。

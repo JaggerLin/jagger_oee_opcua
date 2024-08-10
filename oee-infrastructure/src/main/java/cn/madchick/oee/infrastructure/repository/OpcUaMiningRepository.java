@@ -48,6 +48,11 @@ public class OpcUaMiningRepository implements IOpcUaMiningRepository {
     }
 
     @Override
+    public String getNode(Long nodeId) {
+        return "";
+    }
+
+    @Override
     public StrategyRich queryStrategyRich(Long strategyId) {
         // 根据策略id查询策略和策略详情
         Strategy strategy = strategyDao.queryStrategy(strategyId);

@@ -18,6 +18,7 @@ public interface IOpcUaMiningRepository {
      * @return 策略id列表
      */
     List<Long> getStrategyIdList(Long activityId);
+
     /**
      * 获取节点列表
      * @param activityId 活动id, strategyId 策略id
